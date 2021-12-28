@@ -28,7 +28,7 @@ foreach ($var["listes"] as $liste){?>
                             <div class="lastAction"></div>
                             <div class="time"><?= $item->getTimer() ?></div>
                             <i data-id="<?= $item->getId() ?>" class="timer fas fa-stopwatch"></i>
-                            <i class="delete fas fa-trash">
+                            <i class="delete fas fa-trash"></i>
                         </div><?php
                     }
                     ?>
