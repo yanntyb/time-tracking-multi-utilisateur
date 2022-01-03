@@ -48,6 +48,7 @@ class HomeController extends Controller
                     ->setId($liste->id)
                     ->setName($liste->name)
                     ->setItems($items)
+                    ->setStartedAt($liste->startedat)
                 ;
             }
             $var["listes"] = $listes;

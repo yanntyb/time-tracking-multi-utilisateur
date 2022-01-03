@@ -6,6 +6,7 @@ class Liste extends Entity
 {
     private User $user;
     private array $items;
+    private string $startedAt;
 
     /**
      * @return User
@@ -42,6 +43,25 @@ class Liste extends Entity
         $this->items = $items;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getStartedAt(): string
+    {
+        return $this->startedAt;
+    }
+
+    /**
+     * @param string $startedAt
+     * @return Liste
+     */
+    public function setStartedAt(string $startedAt): Liste
+    {
+        $this->startedAt = $startedAt;
+        return $this;
+    }
+
 
 
 
