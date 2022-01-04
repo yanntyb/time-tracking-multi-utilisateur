@@ -8,7 +8,7 @@ interface dataObj {
         lastAction: Date,
     }[],
     startedAt: Date,
-    initialized?: boolean
+    initialized?: boolean,
 }
 
 class List{
@@ -16,15 +16,12 @@ class List{
     private child: Item[];
     private id: number;
 
-    constructor(private parentElement: HTMLDivElement, private data: dataObj, id: number, toStorage: boolean) {
+    constructor(private parentElement: HTMLDivElement, private data: dataObj, id: number) {
         this.div = document.createElement("div") as HTMLElement;
         this.child = [];
         this.id = id;
         if(this.data.initialized){
             this.data.startedAt = new Date(this.data.startedAt);
-        }
-        if(toStorage){
-            this.toStorage();
         }
         this.init();
     }
@@ -60,13 +57,15 @@ class List{
         const remove = this.div.querySelector(".delete") as HTMLElement;
         remove.addEventListener("click", () => {
             console.log(this.id);
-            for(let child of this.child){
-                child.div.remove();
+            const req = new XMLHttpRequest();
+            req.open("POST", "/removeList");
+            req.onload = () => {
+                for(let child of this.child){
+                    child.div.remove();
+                }
+                this.div.remove();
             }
-            this.div.remove();
-            let currentStorage = JSON.parse(localStorage.getItem("listes") as string);
-            delete currentStorage[this.id];
-            localStorage.setItem("listes", JSON.stringify(currentStorage))
+            req.send(JSON.stringify({"id": this.id}));
         })
 
         //Expand

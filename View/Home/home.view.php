@@ -24,6 +24,7 @@
                     name: "<?=$item->getName()?>",
                     timer: <?=$item->getTimer()?>,
                     lastAction: "<?=$item->getStartedAt()?>"
+                    id: <?=$item->getId()?>
                 }
             );
         <?php
@@ -33,7 +34,8 @@
             {
                 title: "<?=$liste->getName()?>",
                 child: items,
-                startedAt: "<?=$liste->getStartedAt()?>"
+                startedAt: "<?=$liste->getStartedAt()?>",
+                id: <?= $liste->getId() ?>
             };
     <?php
     }

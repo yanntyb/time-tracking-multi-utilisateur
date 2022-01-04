@@ -645,7 +645,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.List = void 0;
 const item_1 = __webpack_require__(/*! ./item */ "./assets/script/module/item.ts");
 class List {
-    constructor(parentElement, data, id, toStorage) {
+    constructor(parentElement, data, id) {
         this.parentElement = parentElement;
         this.data = data;
         this.div = document.createElement("div");
@@ -653,9 +653,6 @@ class List {
         this.id = id;
         if (this.data.initialized) {
             this.data.startedAt = new Date(this.data.startedAt);
-        }
-        if (toStorage) {
-            this.toStorage();
         }
         this.init();
     }
@@ -684,13 +681,15 @@ class List {
         const remove = this.div.querySelector(".delete");
         remove.addEventListener("click", () => {
             console.log(this.id);
-            for (let child of this.child) {
-                child.div.remove();
-            }
-            this.div.remove();
-            let currentStorage = JSON.parse(localStorage.getItem("listes"));
-            delete currentStorage[this.id];
-            localStorage.setItem("listes", JSON.stringify(currentStorage));
+            const req = new XMLHttpRequest();
+            req.open("POST", "/removeList");
+            req.onload = () => {
+                for (let child of this.child) {
+                    child.div.remove();
+                }
+                this.div.remove();
+            };
+            req.send(JSON.stringify({ "id": this.id }));
         });
         let expanded = false;
         const expand = this.div.querySelector(".expand");
@@ -845,15 +844,15 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ListeManager = void 0;
 const liste_1 = __webpack_require__(/*! ./liste */ "./assets/script/module/liste.ts");
 class ListeManager {
-    constructor(child) {
-        this.child = child;
+    constructor(data) {
         this.div = document.querySelector("#main");
-        this.data = this.getData();
+        this.data = data;
+        this.child = [];
         this.init();
     }
-    addChild(data, toLocalStorage) {
+    addChild(data) {
         this.removeChildEvent();
-        this.child.push(new liste_1.List(this.div, data, this.child.length, toLocalStorage));
+        this.child.push(new liste_1.List(this.div, data, data.id));
         this.addChildEvent();
     }
     addChildEvent() {
@@ -865,10 +864,15 @@ class ListeManager {
         const input = divAdd.querySelector("input[type=text]");
         divAdd.addEventListener("click", () => {
             if (input.value !== "") {
-                this.addChild({
-                    title: input.value,
-                    startedAt: new Date()
-                }, true);
+                const req = new XMLHttpRequest();
+                req.open("POST", "/addList");
+                req.onload = () => {
+                    this.addChild({
+                        title: input.value,
+                        startedAt: new Date()
+                    });
+                };
+                req.send(JSON.stringify({ "title": input.value }));
             }
         });
     }
@@ -878,9 +882,6 @@ class ListeManager {
             addChild.remove();
         }
     }
-    getData() {
-        return JSON.parse(localStorage.getItem("listes"));
-    }
     init() {
         if (this.data) {
             if (Object.keys(this.data).length > 0) {
@@ -889,7 +890,7 @@ class ListeManager {
                 for (let key of keys) {
                     let dataList = data[parseInt(key)];
                     dataList.initialized = true;
-                    this.addChild(dataList, false);
+                    this.addChild(dataList);
                 }
             }
             else {
@@ -985,7 +986,7 @@ var exports = __webpack_exports__;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 __webpack_require__(/*! ./style/main.scss */ "./assets/style/main.scss");
 const listeManager_1 = __webpack_require__(/*! ./script/module/listeManager */ "./assets/script/module/listeManager.ts");
-new listeManager_1.ListeManager([]);
+new listeManager_1.ListeManager(listes);
 
 })();
 

@@ -21,8 +21,9 @@ $router = new Router(new Route("home","/",[HomeController::class,"home"]));
 $router->addRoute("connection", "/connection?", [ConnectionController::class, "connection"]);
 
 /**
- * Add liste to DB
+ * Liste management
  */
 $router->addRoute("addListe","/addList", [ListeController::class, "add"]);
+$router->addRoute("removeListe", "/removeList", [ListeController::class, "remove"]);
 
 $router->handleQuery(str_replace("/index.php","",$_SERVER['PHP_SELF']));

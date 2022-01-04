@@ -20,16 +20,19 @@ interface dataObj {
 class ListeManager{
     private readonly div: HTMLDivElement;
     private data: dataObj | {};
-
-    public constructor(private child: Array<List>){
+    private child: list[];
+    
+    public constructor(data: dataObj){
         this.div = document.querySelector("#main") as HTMLDivElement;
-        this.data = this.getData();
+        this.data = data;
+        this.child = [];
         this.init();
     }
 
-    private addChild(data: list,toLocalStorage: boolean) :void{
+    private addChild(data: list) :void{
         this.removeChildEvent();
-        this.child.push(new List(this.div, data,this.child.length,toLocalStorage))
+        // @ts-ignore
+        this.child.push(new List(this.div, data,data.id))
         this.addChildEvent();
     }
 
@@ -43,10 +46,15 @@ class ListeManager{
         const input = divAdd.querySelector("input[type=text]") as HTMLInputElement;
         divAdd.addEventListener("click", () => {
             if(input.value !== ""){
-                this.addChild({
-                    title: input.value,
-                    startedAt: new Date()
-                },true);
+                const req = new XMLHttpRequest();
+                req.open("POST", "/addList");
+                req.onload = () => {
+                    this.addChild({
+                        title: input.value,
+                        startedAt: new Date()
+                    });
+                }
+                req.send(JSON.stringify({"title": input.value}));
             }
         })
     }
@@ -58,9 +66,6 @@ class ListeManager{
         }
     }
 
-    private getData(): dataObj[] | {}{
-        return JSON.parse(localStorage.getItem("listes") as string);
-    }
 
     private init(){
         if(this.data){
@@ -70,7 +75,7 @@ class ListeManager{
                 for(let key of keys){
                     let dataList = data[parseInt(key)] as list;
                     dataList.initialized = true;
-                    this.addChild(dataList,false);
+                    this.addChild(dataList);
                 }
             }
             else{

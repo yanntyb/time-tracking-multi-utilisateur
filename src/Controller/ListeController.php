@@ -7,7 +7,7 @@ use RedBeanPHP\R;
 class ListeController
 {
     public function add(){
-        $data = json_decode(file_get_contents("php://input"));
+        $data = $this->getData();
         $liste = R::dispense("liste");
         $liste->name = $data->title;
         $liste->startedat = date("Y-m-d"); ;
@@ -15,5 +15,14 @@ class ListeController
 
         $id = R::store($liste);
         dump($id);
+    }
+
+    public function remove(){
+        $data = $this->getData();
+        R::trash("liste",$data->id);
+    }
+
+    public function getData(){
+        return json_decode(file_get_contents("php://input"));
     }
 }
