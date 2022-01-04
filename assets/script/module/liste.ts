@@ -182,9 +182,7 @@ class List{
                         lastAction: child.lastAction
                     })
                 }
-                let currentStorage = JSON.parse(localStorage.getItem("listes") as string);
-                currentStorage[this.id].child = childObject;
-                localStorage.setItem("listes", JSON.stringify(currentStorage))
+                console.log(childObject);
 
                 timerFunc();
             },1000)
