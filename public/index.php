@@ -11,7 +11,7 @@ use Yanntyb\App\Model\Classes\Route;
 use Yanntyb\App\Model\Classes\Router;
 use RedBeanPHP\R;
 
-R::setup("mysql:host=localhost;dbname=timetracking", "root", "");
+R::setup("mysql:host=localhost;dbname=timetracking;port=3306", "root", "");
 
 $router = new Router(new Route("home","/",[HomeController::class,"home"]));
 

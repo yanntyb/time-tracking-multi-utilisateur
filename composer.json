@@ -1,0 +1,17 @@
+{
+    "name": "yanntyb/app",
+    "autoload": {
+        "psr-4": {
+            "Yanntyb\\App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "ShyroVO",
+            "email": "bosquet.laurie@outlook.com"
+        }
+    ],
+    "require": {
+        "gabordemooij/redbean": "^5.7"
+    }
+}

@@ -1,0 +1,131 @@
+@use "item";
+
+.list{
+  width: 28%;
+  height: 45%;
+  border: 4px solid #C6C6C6;
+  background-color: #EAEAEA;
+  border-radius: 3px 3px 3px 3px;
+  padding: 1%;
+
+  &#expand{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80%;
+    height: 80%;
+    padding: 4%;
+    margin: 6%;
+
+    .item{
+      .lastAction{
+        display: block;
+      }
+      .time{
+        display: block;
+      }
+      .delete{
+        display: block;
+      }
+    }
+  }
+
+  &#addList{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 500%;
+
+    div{
+      width: 100%;
+      text-align: center;
+      input{
+        width: 80%;
+
+      }
+      & input[type=submit]:hover{
+        cursor: pointer;
+      }
+    }
+
+
+  }
+
+  h1{
+    width: 100%;
+    text-align: center;
+    color: #7D9FD3;
+    text-transform: uppercase;
+    font-size: 250%;
+  }
+
+  .content{
+    width: 100%;
+    height: 70%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10%;
+
+    .timer{
+      width: 15%;
+      height: 100%;
+      text-align: center;
+      &>div{
+        height: 50%;
+        width: 100%;
+
+        span{
+          font-size: 200%;
+          color: #5e5b5b;
+        }
+      }
+      i{
+        font-size: 450%;
+        color: #74B09A;
+
+      }
+    }
+
+    .work{
+      padding: 1%;
+      width: 80%;
+      height: 100%;
+      border: 1px solid gray;
+      background-color: #F4F4F4;
+      overflow-y: scroll;
+    }
+  }
+
+  .action{
+    margin-top: 2%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 200%;
+
+    *{
+      &:hover{
+        cursor: pointer;
+      }
+    }
+
+  }
+
+  input {
+    padding: 5px;
+    font-size: 16px;
+    border-width: 1px;
+    border-color: #CCCCCC;
+    border-style: solid;
+    border-radius: 0;
+    box-shadow: 0 0 5px rgba(66,66,66,.64);
+  }
+  input:focus {
+    outline:none;
+  }
+}

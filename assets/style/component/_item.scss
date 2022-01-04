@@ -1,0 +1,30 @@
+.item{
+  padding: 1%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 200%;
+  border-bottom: 1px solid #5e5b5b;
+
+  .timer{
+    color: green;
+  }
+
+  input[type=text]{
+    width: 65% !important;
+  }
+
+  .lastAction{
+    display: none;
+  }
+
+  .time{
+    display: none;
+  }
+
+  .delete{
+    display: none;
+  }
+}
