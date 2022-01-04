@@ -72,10 +72,7 @@ class Item{
         const remove = this.div.querySelector(".delete") as HTMLElement;
         remove.addEventListener("click", () => {
             let currentStorage = JSON.parse(localStorage.getItem("listes") as string);
-            console.log(currentStorage);
-            console.log(currentStorage[this.parentId].child[this.id]);
             currentStorage = currentStorage[this.parentId].child.splice(this.id, 1);
-            console.log(currentStorage);
             localStorage.setItem("listes", JSON.stringify(currentStorage))
             this.div.remove();
         })
