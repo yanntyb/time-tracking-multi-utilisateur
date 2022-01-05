@@ -49,10 +49,14 @@ class ListeManager{
                 const req = new XMLHttpRequest();
                 req.open("POST", "/addList");
                 req.onload = () => {
+                    const response = JSON.parse(req.responseText);
                     this.addChild({
                         title: input.value,
-                        startedAt: new Date()
+                        startedAt: new Date(),
+                        // @ts-ignore
+                        id: response.id
                     });
+
                 }
                 req.send(JSON.stringify({"title": input.value}));
             }

@@ -575,13 +575,18 @@ class Item {
             submit.addEventListener("click", () => {
                 if (title.value !== "") {
                     this.title = title.value;
-                    const value = this.title;
-                    const span = document.createElement("span");
-                    title.remove();
-                    const div = this.div.querySelector("div");
-                    div.prepend(span);
-                    span.innerHTML = value;
-                    submit.remove();
+                    const req = new XMLHttpRequest();
+                    req.open("POST", "/addItem");
+                    req.onload = () => {
+                        const value = this.title;
+                        const span = document.createElement("span");
+                        title.remove();
+                        const div = this.div.querySelector("div");
+                        div.prepend(span);
+                        span.innerHTML = value;
+                        submit.remove();
+                    };
+                    req.send(JSON.stringify({ "listeId": this.parentId, "title": this.title, "id": this.id }));
                 }
             });
         }
@@ -600,10 +605,13 @@ class Item {
         }
         const remove = this.div.querySelector(".delete");
         remove.addEventListener("click", () => {
-            let currentStorage = JSON.parse(localStorage.getItem("listes"));
-            currentStorage = currentStorage[this.parentId].child.splice(this.id, 1);
-            localStorage.setItem("listes", JSON.stringify(currentStorage));
-            this.div.remove();
+            console.log(this.id, this.parentId);
+            const req = new XMLHttpRequest();
+            req.open("POST", "/removeItem");
+            req.onload = () => {
+                this.div.remove();
+            };
+            req.send(JSON.stringify({ "id": this.id, "listeId": this.parentId }));
         });
     }
     drawLastAction() {
@@ -680,7 +688,6 @@ class List {
         });
         const remove = this.div.querySelector(".delete");
         remove.addEventListener("click", () => {
-            console.log(this.id);
             const req = new XMLHttpRequest();
             req.open("POST", "/removeList");
             req.onload = () => {
@@ -688,6 +695,7 @@ class List {
                     child.div.remove();
                 }
                 this.div.remove();
+                this.child = [];
             };
             req.send(JSON.stringify({ "id": this.id }));
         });
@@ -710,7 +718,6 @@ class List {
     }
     setTimer() {
         for (let item of this.child) {
-            console.log(item);
             let timer = item.div.querySelector(".timer");
             const elClone = timer.cloneNode(true);
             const parentNode = timer.parentNode;
@@ -779,39 +786,24 @@ class List {
                 }
                 let childObject = [];
                 for (let child of this.child) {
-                    childObject.push({
-                        name: child.title,
-                        timer: child.time,
-                        lastAction: child.lastAction
-                    });
+                    if (child.title !== "") {
+                        childObject.push({
+                            id: child.id,
+                            name: child.title,
+                            timer: child.time,
+                            lastAction: child.lastAction
+                        });
+                    }
                 }
-                console.log(childObject);
+                if (childObject.length > 0) {
+                    const req = new XMLHttpRequest();
+                    req.open("POST", "/updateItemTimer");
+                    req.send(JSON.stringify({ "listeid": this.id, "child": childObject }));
+                }
                 timerFunc();
             }, 1000);
         };
         timerFunc();
-    }
-    toStorage() {
-        let currentStorage = JSON.parse(localStorage.getItem("listes"));
-        const id = this.id;
-        if (currentStorage === null) {
-            currentStorage = {
-                [this.id]: {
-                    title: this.data.title,
-                    child: {},
-                    startedAt: this.data.startedAt
-                }
-            };
-        }
-        else {
-            currentStorage[id] =
-                {
-                    title: this.data.title,
-                    child: {},
-                    startedAt: this.data.startedAt
-                };
-        }
-        localStorage.setItem("listes", JSON.stringify(currentStorage));
     }
     init() {
         this.createDom();
@@ -865,9 +857,11 @@ class ListeManager {
                 const req = new XMLHttpRequest();
                 req.open("POST", "/addList");
                 req.onload = () => {
+                    const response = JSON.parse(req.responseText);
                     this.addChild({
                         title: input.value,
-                        startedAt: new Date()
+                        startedAt: new Date(),
+                        id: response.id
                     });
                 };
                 req.send(JSON.stringify({ "title": input.value }));

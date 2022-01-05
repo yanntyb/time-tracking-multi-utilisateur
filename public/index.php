@@ -6,6 +6,7 @@ require "../vendor/autoload.php";
 
 use Yanntyb\App\Controller\ConnectionController;
 use Yanntyb\App\Controller\HomeController;
+use Yanntyb\App\Controller\ItemController;
 use Yanntyb\App\Controller\ListeController;
 use Yanntyb\App\Model\Classes\Route;
 use Yanntyb\App\Model\Classes\Router;
@@ -25,5 +26,12 @@ $router->addRoute("connection", "/connection?", [ConnectionController::class, "c
  */
 $router->addRoute("addListe","/addList", [ListeController::class, "add"]);
 $router->addRoute("removeListe", "/removeList", [ListeController::class, "remove"]);
+
+/**
+ * Item management
+ */
+$router->addRoute("addItem","/addItem",[ItemController::class, "add"]);
+$router->addRoute("updateTimer", "/updateItemTimer", [ItemController::class,"updateTimer"]);
+$router->addRoute("removeItem", "/removeItem", [ItemController::class, "remove"]);
 
 $router->handleQuery(str_replace("/index.php","",$_SERVER['PHP_SELF']));

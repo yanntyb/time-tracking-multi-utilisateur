@@ -23,8 +23,8 @@
                 {
                     name: "<?=$item->getName()?>",
                     timer: <?=$item->getTimer()?>,
-                    lastAction: "<?=$item->getStartedAt()?>"
-                    id: <?=$item->getId()?>
+                    lastAction: "<?=$item->getStartedAt()?>",
+                    id: <?=$item->getRelativeId()?>
                 }
             );
         <?php

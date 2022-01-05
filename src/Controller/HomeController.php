@@ -42,6 +42,7 @@ class HomeController extends Controller
                         ->setStartedAt($item->startedat)
                         ->setTimer($item->timer)
                         ->setListeId($liste->id)
+                        ->setRelativeId($item->relativeid)
                         ;
                 }
                 $listes[] = (new Liste())

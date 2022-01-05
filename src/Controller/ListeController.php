@@ -10,11 +10,13 @@ class ListeController
         $data = $this->getData();
         $liste = R::dispense("liste");
         $liste->name = $data->title;
-        $liste->startedat = date("Y-m-d"); ;
-        $liste->user_id = (unserialize($_SESSION["user"]))->getId();
+        $liste->startedat = date("Y-m-d");
+        $liste->user_id = (unserialize($_SESSION["user"], [User::class]))->getId();
 
         $id = R::store($liste);
-        dump($id);
+        echo json_encode([
+            "id" => $id
+        ]);
     }
 
     public function remove(){

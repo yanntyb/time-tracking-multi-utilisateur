@@ -2,7 +2,7 @@ class Item{
     public div: HTMLElement;
     title: string;
     public time: number;
-    private id: number;
+    public id: number;
     lastAction: Date;
     private parentId: any;
 
@@ -44,13 +44,18 @@ class Item{
             submit.addEventListener("click", () => {
                 if(title.value !== ""){
                     this.title = title.value;
-                    const value = this.title;
-                    const span = document.createElement("span");
-                    title.remove();
-                    const div = this.div.querySelector("div") as HTMLElement;
-                    div.prepend(span);
-                    span.innerHTML = value;
-                    submit.remove();
+                    const req = new XMLHttpRequest();
+                    req.open("POST", "/addItem");
+                    req.onload = () => {
+                        const value = this.title;
+                        const span = document.createElement("span");
+                        title.remove();
+                        const div = this.div.querySelector("div") as HTMLElement;
+                        div.prepend(span);
+                        span.innerHTML = value;
+                        submit.remove();
+                    }
+                    req.send(JSON.stringify( {"listeId": this.parentId,"title": this.title, "id": this.id}));
                 }
             })
         }
@@ -71,10 +76,13 @@ class Item{
         //Delete
         const remove = this.div.querySelector(".delete") as HTMLElement;
         remove.addEventListener("click", () => {
-            let currentStorage = JSON.parse(localStorage.getItem("listes") as string);
-            currentStorage = currentStorage[this.parentId].child.splice(this.id, 1);
-            localStorage.setItem("listes", JSON.stringify(currentStorage))
-            this.div.remove();
+            console.log(this.id, this.parentId);
+            const req = new XMLHttpRequest();
+            req.open("POST","/removeItem");
+            req.onload = () => {
+                this.div.remove();
+            }
+            req.send(JSON.stringify({"id": this.id, "listeId": this.parentId}));
         })
     }
 

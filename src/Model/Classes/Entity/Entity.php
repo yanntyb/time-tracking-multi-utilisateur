@@ -9,6 +9,25 @@ class Entity
 {
     private int $id;
     private string $name;
+    private int $relativeId;
+
+    /**
+     * @return int
+     */
+    public function getRelativeId(): int
+    {
+        return $this->relativeId;
+    }
+
+    /**
+     * @param int $relativeId
+     * return $this
+     */
+    public function setRelativeId(int $relativeId): self
+    {
+        $this->relativeId = $relativeId;
+        return $this;
+    }
 
     /**
      * @return int

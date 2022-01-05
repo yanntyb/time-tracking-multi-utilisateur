@@ -56,7 +56,6 @@ class List{
         //Remove list
         const remove = this.div.querySelector(".delete") as HTMLElement;
         remove.addEventListener("click", () => {
-            console.log(this.id);
             const req = new XMLHttpRequest();
             req.open("POST", "/removeList");
             req.onload = () => {
@@ -64,6 +63,7 @@ class List{
                     child.div.remove();
                 }
                 this.div.remove();
+                this.child = [];
             }
             req.send(JSON.stringify({"id": this.id}));
         })
@@ -91,7 +91,6 @@ class List{
 
     private setTimer(){
         for(let item of this.child){
-            console.log(item);
             //Remove Event listener
             let timer = item.div.querySelector(".timer") as HTMLElement;
             const elClone = timer.cloneNode(true);
@@ -176,13 +175,20 @@ class List{
 
                 let childObject: any[] = [];
                 for(let child of this.child){
-                    childObject.push({
-                        name: child.title,
-                        timer: child.time,
-                        lastAction: child.lastAction
-                    })
+                    if(child.title !== ""){
+                        childObject.push({
+                            id: child.id,
+                            name: child.title,
+                            timer: child.time,
+                            lastAction: child.lastAction
+                        })
+                    }
                 }
-                console.log(childObject);
+                if(childObject.length > 0){
+                    const req = new XMLHttpRequest();
+                    req.open("POST","/updateItemTimer");
+                    req.send(JSON.stringify({"listeid": this.id, "child": childObject}));
+                }
 
                 timerFunc();
             },1000)
@@ -190,29 +196,6 @@ class List{
         timerFunc();
     }
 
-    private toStorage() {
-        let currentStorage = JSON.parse(localStorage.getItem("listes") as string);
-        const id = this.id
-        if(currentStorage === null){
-            currentStorage = {
-                [this.id]: {
-                    title: this.data.title,
-                    child: {},
-                    startedAt: this.data.startedAt
-                }
-            }
-        }
-        else{
-            currentStorage[id] =
-                {
-                    title: this.data.title,
-                    child: {},
-                    startedAt: this.data.startedAt
-                }
-        }
-
-        localStorage.setItem("listes", JSON.stringify(currentStorage));
-    }
 
     init(){
         this.createDom();
